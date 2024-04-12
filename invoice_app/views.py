@@ -53,8 +53,8 @@ def create_receipt(request):
     if request.method == 'POST':
         form = ReceiptForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('list_receipts')
+            reciept=form.save()
+            return generate_pdf(request,reciept.id)
     else:
         form = ReceiptForm()
     return render(request, 'create_receipt.html', {'form': form})

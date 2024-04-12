@@ -5,17 +5,34 @@
     <title>Receipt Management</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <style>
         body {
-            padding-top: 20px;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Modern font */
+            
+        }
+        .navbar {
+            background-color: #16122A; /* Blue for a professional look */
+            border-bottom: 3px solid #24214C; /* Darker blue border */
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff !important; /* White text for contrast */
+        }
+        .navbar-brand:hover, .nav-link:hover {
+            color: #cce5ff !important; /* Light blue on hover for interactivity */
         }
         .container {
-            padding: 15px;
+            padding: 20px;
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            margin-top: 3rem;
         }
+        
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg">
         <a class="navbar-brand" href="/">Receipt Management</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>

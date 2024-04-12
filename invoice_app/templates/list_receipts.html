@@ -2,6 +2,7 @@
 
 {% block content %}
 
+
 <style>
     .search-and-add {
         display: flex;
@@ -11,6 +12,8 @@
         gap: 10px;
         margin-bottom: 20px;
     }
+
+    
 
     .search-and-add form {
         flex-grow: 1;
@@ -30,53 +33,89 @@
         margin-bottom: 20px;
     }
 
+   
+
     @media (min-width: 576px) {
-    .search-and-add {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
+        .search-and-add {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .search-and-add form {
+            display: flex;
+            flex-grow: 1;
+            gap: 10px;
+        }
+
+        .search-and-add .form-control {
+            flex-grow: 2;
+            margin-bottom: 0;
+        }
+
+        .search-and-add .form-select {
+            flex-grow: 1;
+            flex-basis: 150px;
+        }
+
+        .search-and-add .btn-search {
+            flex-grow: 0;
+        }
+
+        .add-receipt-btn {
+            flex-grow: 0;
+            white-space: nowrap;
+        }
     }
 
-    .search-and-add form {
-        display: flex;
-        flex-grow: 1;
-        gap: 10px;
+    .btn-primary {
+        background-color: #16122A;
+        border-color: #16122A;
     }
 
-    .search-and-add .form-control {
-        flex-grow: 2; /* Allows search bar to grow and use available space */
-        margin-bottom: 0; /* Removes the margin at the bottom */
+    .btn-success {
+        background-color: #6e53de;
+        border-color: #22863a;
     }
 
-    .search-and-add .form-select {
-        flex-grow: 1; /* Allows the select box to grow but with less priority than search bar */
-        flex-basis: 150px; /* Gives a default width to the select box */
+    .table th, .table td {
+        border-top: 1px solid #dee2e6;
+        background-color: #f8f9fa;
     }
 
-    .search-and-add .btn-search {
-        flex-grow: 0; /* Prevents search button from growing */
+    .table th {
+        background-color: #e9ecef;
     }
 
-    .add-receipt-btn {
-        flex-grow: 0; /* Prevents add button from growing */
-        white-space: nowrap; /* Ensures text doesn't wrap */
+    .pagination .page-link {
+        color: #16122A; /* Dark shade for text */
+        background-color: #ffffff; /* White background for contrast */
+        border: 1px solid #dee2e6; /* Light grey border for definition */
     }
-}
-
+    .pagination .page-link:hover {
+        background-color: #f8f9fa; /* Light grey background on hover */
+        border-color: #16122A; /* Dark border on hover to match text */
+    }
+    .pagination .page-item.active .page-link {
+        background-color: #16122A; /* Dark background for active page */
+        border-color: #16122A; /* Same color border for a cohesive look */
+        color: #ffffff; /* White text for contrast on active page */
+    }
+    .pagination .page-item.disabled .page-link {
+        color: #6c757d; /* Standard Bootstrap color for disabled elements */
+    }
 </style>
 
+
 <div class="container">
-    <h1 class="text-center bg-primary text-white py-2">Receipts</h1>
+    <div class="title-box">
+    <h1 class="text-center  py-2">Receipts</h1>
+</div>
     <div class="search-and-add">
         <form method="get" action="." class="flex-grow-1 d-flex">
             <input type="text" name="search" class="form-control" placeholder="Search receipts..." value="{{ request.GET.search }}">
             <button type="submit" class="btn btn-primary">Search</button>
-            <select name="per_page" class="form-select" onchange="this.form.submit()">
-                <option value="10" {% if request.GET.per_page == "10" %}selected{% endif %}>10 per page</option>
-                <option value="20" {% if request.GET.per_page == "20" %}selected{% endif %}>20 per page</option>
-                <option value="50" {% if request.GET.per_page == "50" %}selected{% endif %}>50 per page</option>
-            </select>
-        <a href="{% url 'create_receipt' %}" class="btn btn-success add-receipt-btn">Add New Receipt</a>
+        <a href="{% url 'create_receipt' %}" class="btn btn-primary add-receipt-btn">Add New Receipt</a>
 
     </form>
 
@@ -85,7 +124,7 @@
         <tr>
             <th>ID</th>
             <th>Name</th>
-            <th>Contact Number</th>            
+            <th class="d-none d-md-table-cell">Contact Number</th>            
             <th scope="col" class="d-none d-md-table-cell">Invoice Number</th>
             <th>Amount</th>
             <th scope="col" class="d-none d-md-table-cell">Reference Number</th>
@@ -95,12 +134,12 @@
         <tr>
             <td>{{ receipt.id }}</td>
             <td>{{ receipt.name }}</td>
-            <td>{{ receipt.contact_number }}</td>
+            <td class="d-none d-md-table-cell" >{{ receipt.contact_number }}</td>
             <td  class="d-none d-md-table-cell">{{ receipt.invoice_number }}</td>
             <td>{{ receipt.amount }}</td>
             <td class="d-none d-md-table-cell">{{ receipt.reference_number }}</td>
             <td>
-                <a href="{% url 'generate_pdf' receipt.id %}" class="btn btn-primary">Generate</a>
+                <a href="{% url 'generate_pdf' receipt.id %}" class="btn btn-primary"><i class="fa-solid fa-download"></i></i></a>
             </td>
         </tr>
         {% empty %}
@@ -111,23 +150,59 @@
     </table>
 
     <!-- Pagination navigation -->
-    <div class="pagination">
-        <span class="step-links">
+    <div class="pagination justify-content-center">
+        <ul class="pagination">
+            <!-- First and Previous Page Links -->
             {% if receipts.has_previous %}
-                <a href="?page=1{% if query %}&search={{ query }}{% endif %}">&laquo; first</a>
-                <a href="?page={{ receipts.previous_page_number }}{% if query %}&search={{ query }}{% endif %}">previous</a>
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" aria-label="First">
+                        <span aria-hidden="true">&laquo;&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ receipts.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo;&laquo;</span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo;</span>
+                </li>
             {% endif %}
-
-            <span class="current">
-                Page {{ receipts.number }} of {{ receipts.paginator.num_pages }}.
-            </span>
-
+    
+            <!-- Current Page Number and Total Pages -->
+            <li class="page-item active" aria-current="page">
+                <span class="page-link">
+                    {{ receipts.number }} / {{ receipts.paginator.num_pages }}
+                </span>
+            </li>
+    
+            <!-- Next and Last Page Links -->
             {% if receipts.has_next %}
-                <a href="?page={{ receipts.next_page_number }}{% if query %}&search={{ query }}{% endif %}">next</a>
-                <a href="?page={{ receipts.paginator.num_pages }}{% if query %}&search={{ query }}{% endif %}">last &raquo;</a>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ receipts.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ receipts.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}" aria-label="Last">
+                        <span aria-hidden="true">&raquo;&raquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&raquo;</span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">&raquo;&raquo;</span>
+                </li>
             {% endif %}
-        </span>
+        </ul>
     </div>
+    
 
 </div>
 {% endblock %}
